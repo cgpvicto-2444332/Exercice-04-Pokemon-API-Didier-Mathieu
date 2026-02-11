@@ -1,0 +1,20 @@
+{
+    "openapi": "3.1.0",
+    "info" : {
+        "title": "Exercice 04 - Pokemon API",
+        "summary": "API permettant de gérer des pokemons avec des opérations CRUD",
+        "description": "Cette API permet de gérer une base de données de pokemons. Elle offre des opérations CRUD complètes : consulter un pokemon par son identifiant, afficher une liste paginée avec filtre par type, ajouter, modifier et supprimer des pokemons.",
+        "contact": {
+            "name": "API Support",
+            "url": "https://www.example.com/support",
+            "email": "support@example.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+    {
+        "url": "http://localhost:3000/",
+        "description": "Serveur de développement"
+    }
+    ]
+}
