@@ -5,9 +5,9 @@
         "summary": "API permettant de gérer des pokemons avec des opérations CRUD",
         "description": "Cette API permet de gérer une base de données de pokemons. Elle offre des opérations CRUD complètes : consulter un pokemon par son identifiant, afficher une liste paginée avec filtre par type, ajouter, modifier et supprimer des pokemons.",
         "contact": {
-            "name": "API Support",
-            "url": "https://www.example.com/support",
-            "email": "support@example.com"
+            "name": "API Pokemon",
+            "url": "http://localhost:3000/",
+            "email": "2444332@etudiant.cegepvicto.ca"
         },
         "version": "1.0.0"
     },
@@ -16,5 +16,115 @@
         "url": "http://localhost:3000/",
         "description": "Serveur de développement"
     }
-    ]
+    ],
+    "paths" : {
+        "/api": {
+            "get": {
+                "summary": "Message de bienvenue",
+                "tags": ["Accueil"],
+                "responses": {
+                    "200": {
+                        "description": "Retourne un message de bienvenue",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "message": "Bienvenue à l'API de Pokémon!"
+                                }               
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/pokemons/{id}" : {
+            "get" : {
+                "description" : "Retourne le pokemon avec l'identifiant au choix",
+                "summary" : "Récupérer pokemon avec l'ID",
+                "tags" : ["Pokémon ID"],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Id du pokémon",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "exemple" : "1245"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pokémon retrouvé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "pokemon": {
+                                            "type": "string",
+                                            "example": "Nidoking"
+                                        },
+                                        "type_primaire": {
+                                            "type": "string",
+                                            "example": "Poison"
+                                        },
+                                        "type_secondaire": {
+                                            "type": "string",
+                                            "example": "Ground"
+                                        },
+                                        "pv": {
+                                            "type": "integer",
+                                            "example": "81"
+                                        },
+                                        "attaque": {
+                                            "type": "integer",
+                                            "example": "102"
+                                        },
+                                        "defense": {
+                                            "type": "integer",
+                                            "example": "77"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404" : {
+                        "description": "Pokémon non rencontrée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Pokemon introuvable avec l'id 1245"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Pokémon non rencontrée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Echec lors de la récupération du pokemon avec l'id 1245"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
