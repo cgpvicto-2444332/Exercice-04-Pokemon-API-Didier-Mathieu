@@ -50,7 +50,7 @@
                         "schema": {
                             "type": "integer",
                             "format": "int32",
-                            "exemple" : "1245"
+                            "example" : 1
                         }
                     }
                 ],
@@ -117,6 +117,116 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Echec lors de la récupération du pokemon avec l'id 1245"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/pokemons/liste" : {
+            "get" : {
+                "description" : "Retourne la liste de 25 pokemons paginée",
+                "summary" : "Récupérer pokemon avec la page et le type",
+                "tags" : ["Liste paginée Pokémon"],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Numéro de la page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 1,
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filtrer par type primaire (ex: Grass, Fire, Water, ect..)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Poison"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste de Pokémon récupérée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "pokemons": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "nom": {
+                                                        "type": "string",
+                                                        "example": "Nidoking"
+                                                    },
+                                                    "type_primaire": {
+                                                        "type": "string",
+                                                        "example": "Poison"
+                                                    },
+                                                    "type_secondaire": {
+                                                        "type": "string",
+                                                        "nullable": true,
+                                                        "example": "Ground"
+                                                    },
+                                                    "pv": {
+                                                        "type": "integer",
+                                                        "example": 81
+                                                    },
+                                                    "attaque": {
+                                                        "type": "integer",
+                                                        "example": 102
+                                                    },
+                                                    "defense": {
+                                                        "type": "integer",
+                                                        "example": 77
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "Poison"
+                                        },
+                                        "nombrePokemonTotal": {
+                                            "type": "integer",
+                                            "example": 42
+                                        },
+                                        "page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "totalPage": {
+                                            "type": "integer",
+                                            "example": 2
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur lors de la récupération des Pokémons",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Echec lors de la récupération de la liste des pokemons"
                                         }
                                     }
                                 }   
