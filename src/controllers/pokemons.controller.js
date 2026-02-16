@@ -1,4 +1,4 @@
-import { _getPokemonById, _getPokemonList } from '../models/pokemons.model.js';
+import { _getPokemonById, _getPokemonList, _ajouterPokemon } from '../models/pokemons.model.js';
 
 export const getPokemonById = async (req, res) => {
     const { id } = req.params;
@@ -43,5 +43,58 @@ export const getPokemonList = async (req, res) => {
         res.status(500).json({
             erreur: "Echec lors de la récupération de la liste des pokemons"
         });
+    }
+};
+
+export const ajouterPokemon = async (req, res) => {
+    const champsRequis = [
+        "nom",
+        "type_primaire",
+        "pv",
+        "attaque",
+        "defense"
+    ];
+    
+    const champsManquants = [];
+
+    for (let i = 0; i < champsRequis.length; i++) {
+        const champ = champsRequis[i];
+        if (req.body[champ] === null || req.body[champ] === "") {
+            champsManquants.push(champ);
+        }
+    }
+    
+    if (champsManquants.length > 0) {
+        return res.status(400).json({
+            erreur: "Le format des données est invalide",
+            champ_manquant: champsManquants
+        });
+    }
+    
+    const nouveauPokemon = {
+        id: null,
+        nom: req.body.nom,
+        type_primaire: req.body.type_primaire,
+        type_secondaire: req.body.type_secondaire,
+        pv: req.body.pv,
+        attaque: req.body.attaque,
+        defense: req.body.defense
+    };
+    
+    try {
+        const resultat = await _ajouterPokemon(nouveauPokemon);
+
+        nouveauPokemon.id = resultat.insertId;
+        
+        res.status(201).json({
+            message: `Le pokemon [${nouveauPokemon.nom}] a été ajouté avec succès`,
+            pokemon: nouveauPokemon
+        });
+    } catch (erreur) {
+        res.status(500);
+        res.send({
+            erreur: `Echec lors de la création du pokemon [${nouveauPokemon.nom}]`
+        });
+        return;
     }
 };

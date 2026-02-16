@@ -55,7 +55,21 @@ const _getPokemonList = async (page = 1, type = null) => {
     }
 }
 
+const _ajouterPokemon = async (nouveauPokemon) => {
+    const requete = "INSERT INTO pokemon (nom, type_primaire, type_secondaire, pv, attaque, defense) VALUES (?, ?, ?, ?, ?, ?)";
+    const params = [nouveauPokemon.nom, nouveauPokemon.type_primaire, nouveauPokemon.type_secondaire, nouveauPokemon.pv, nouveauPokemon.attaque, nouveauPokemon.defense];
+    
+    try {
+        const [resultats] = await pool.query(requete, params);
+        return resultats ?? null;
+    } catch (erreur) {
+        console.log(`Erreur, code: ${erreur.code} sqlState ${erreur.sqlState} : ${erreur.sqlMessage}`);
+        throw erreur;
+    }
+};
+
 export { 
     _getPokemonById,
-    _getPokemonList
+    _getPokemonList,
+    _ajouterPokemon
 };
