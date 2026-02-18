@@ -259,6 +259,134 @@
                         }
                     }
                 }
+            },
+            "put" : {
+                "description" : "Modifie le pokemon avec l'identifiant au choix",
+                "summary" : "Modifier pokemon avec l'ID",
+                "tags" : ["Pokémon ID"],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Id du pokémon",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example" : 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nom": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "type_primaire": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "type_secondaire": {
+                                        "type": "string",
+                                        "example": "",
+                                        "nullable": true
+                                    },
+                                    "pv": {
+                                        "type": "integer",
+                                        "example": 0
+                                    },
+                                    "attaque": {
+                                        "type": "integer",
+                                        "example": 0
+                                    },
+                                    "defense": {
+                                        "type": "integer",
+                                        "example": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Pokémon modifié avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le pokemon id [id] a été modifié avec succès"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "404" : {
+                        "description": "Pokémon non rencontré",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le pokemon id [id] n'existe pas dans la base de données"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "400" : {
+                        "description": "Erreur de paramètres manquants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le format des données est invalide"
+                                        },
+                                        "champs_manquants": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": ["pv", "attaque"]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Pokémon non modifié",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la modification du pokemon [nom_du_pokemon]"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
             }
         },
         "/api/pokemons/liste" : {
@@ -303,6 +431,10 @@
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 50
+                                                    },
                                                     "nom": {
                                                         "type": "string",
                                                         "example": "Nidoking"

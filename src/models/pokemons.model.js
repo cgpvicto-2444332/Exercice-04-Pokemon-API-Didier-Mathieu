@@ -17,7 +17,7 @@ const _getPokemonList = async (page = 1, type = null) => {
     const limit = 25;
     const offset = (page - 1) * limit;
     
-    let requetePokemons = "SELECT nom, type_primaire, type_secondaire, pv, attaque, defense FROM pokemon";
+    let requetePokemons = "SELECT id, nom, type_primaire, type_secondaire, pv, attaque, defense FROM pokemon";
     let requeteCount = "SELECT COUNT(*) as total FROM pokemon";
     const params = [];
     
@@ -68,8 +68,22 @@ const _ajouterPokemon = async (nouveauPokemon) => {
     }
 };
 
+const _modifierPokemon = async (pokemonAModifier) => {
+    const requete = "UPDATE pokemon SET nom = ?, type_primaire = ?, type_secondaire = ?, pv = ?, attaque = ?, defense = ? WHERE id = ?";
+    const params = [pokemonAModifier.id, pokemonAModifier.nom, pokemonAModifier.type_primaire, pokemonAModifier.type_secondaire, pokemonAModifier.pv, pokemonAModifier.attaque, pokemonAModifier.defense];
+    
+    try {
+        const [resultats] = await pool.query(requete, params);
+        return resultats ?? null;
+    } catch (erreur) {
+        console.log(`Erreur, code: ${erreur.code} sqlState ${erreur.sqlState} : ${erreur.sqlMessage}`);
+        throw erreur;
+    }
+};
+
 export { 
     _getPokemonById,
     _getPokemonList,
-    _ajouterPokemon
+    _ajouterPokemon,
+    _modifierPokemon
 };

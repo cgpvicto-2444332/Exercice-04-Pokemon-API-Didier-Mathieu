@@ -1,7 +1,7 @@
-import { _getPokemonById, _getPokemonList, _ajouterPokemon } from '../models/pokemons.model.js';
+import { _getPokemonById, _getPokemonList, _ajouterPokemon, _modifierPokemon } from '../models/pokemons.model.js';
 
 export const getPokemonById = async (req, res) => {
-    const { id } = req.params;
+    const id = req.params.id;
 
     try {
         const pokemon = await _getPokemonById(id);
@@ -67,7 +67,7 @@ export const ajouterPokemon = async (req, res) => {
     if (champsManquants.length > 0) {
         return res.status(400).json({
             erreur: "Le format des données est invalide",
-            champ_manquant: champsManquants
+            champs_manquants: champsManquants
         });
     }
     
@@ -94,6 +94,61 @@ export const ajouterPokemon = async (req, res) => {
         res.status(500);
         res.send({
             erreur: `Echec lors de la création du pokemon [${nouveauPokemon.nom}]`
+        });
+        return;
+    }
+};
+
+export const modifierPokemon = async (req, res) => {
+    const champsRequis = [
+        "nom",
+        "type_primaire",
+        "pv",
+        "attaque",
+        "defense"
+    ];
+    
+    const champsManquants = [];
+
+    for (let i = 0; i < champsRequis.length; i++) {
+        const champ = champsRequis[i];
+        if (req.body[champ] === null || req.body[champ] === "") {
+            champsManquants.push(champ);
+        }
+    }
+    
+    if (champsManquants.length > 0) {
+        return res.status(400).json({
+            erreur: "Le format des données est invalide",
+            champs_manquants: champsManquants
+        });
+    }
+    
+    const pokemonAModifier = {
+        id: req.params.id,
+        nom: req.body.nom,
+        type_primaire: req.body.type_primaire,
+        type_secondaire: req.body.type_secondaire ?? null,
+        pv: req.body.pv,
+        attaque: req.body.attaque,
+        defense: req.body.defense
+    };
+    
+    try {
+        const resultat = await _modifierPokemon(pokemonAModifier);
+
+        if(!resultat) {
+            return res.status(404).json({
+                erreur: `Le pokemon id [${pokemonAModifier.id}] n'existe pas dans la base de données`
+            });
+        }
+        return res.status(200).json({
+            message: `Le pokemon id [${pokemonAModifier.id}] a été modifié avec succès`
+        });
+    } catch (erreur) {
+        res.status(500);
+        res.send({
+            erreur: `Echec lors de la modification du pokemon [${pokemonAModifier.nom}]`
         });
         return;
     }
