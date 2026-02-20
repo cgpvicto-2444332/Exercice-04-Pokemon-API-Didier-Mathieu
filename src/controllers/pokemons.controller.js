@@ -1,4 +1,4 @@
-import { _getPokemonById, _getPokemonList, _ajouterPokemon, _modifierPokemon } from '../models/pokemons.model.js';
+import { _getPokemonById, _getPokemonList, _ajouterPokemon, _modifierPokemon, _supprimerPokemon } from '../models/pokemons.model.js';
 
 export const getPokemonById = async (req, res) => {
     const id = req.params.id;
@@ -151,5 +151,31 @@ export const modifierPokemon = async (req, res) => {
             erreur: `Echec lors de la modification du pokemon [${pokemonAModifier.nom}]`
         });
         return;
+    }
+};
+
+export const supprimerPokemon = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const pokemon = await _getPokemonById(id);
+
+        if (pokemon == null) {
+            res.status(404).json({
+                erreur: `Le pokemon id [${id}] n'existe pas dans la base de données`
+            });
+            return;
+        }
+
+        const resultat = await _supprimerPokemon(id);
+
+        res.status(200).json({
+            message: `Le pokemon id [${id}] a été supprimé avec succès` 
+        });
+    } catch (erreur) {
+        console.log(`Erreur SQL - code: ${erreur.code} sqlState ${erreur.sqlState} : ${erreur.sqlMessage}`);
+        res.status(500).json({
+            erreur: `Echec lors de la suppression du pokemon [${pokemon.nom}]`
+        });
     }
 };

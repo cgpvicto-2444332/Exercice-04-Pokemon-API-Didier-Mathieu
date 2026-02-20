@@ -70,7 +70,20 @@ const _ajouterPokemon = async (nouveauPokemon) => {
 
 const _modifierPokemon = async (pokemonAModifier) => {
     const requete = "UPDATE pokemon SET nom = ?, type_primaire = ?, type_secondaire = ?, pv = ?, attaque = ?, defense = ? WHERE id = ?";
-    const params = [pokemonAModifier.id, pokemonAModifier.nom, pokemonAModifier.type_primaire, pokemonAModifier.type_secondaire, pokemonAModifier.pv, pokemonAModifier.attaque, pokemonAModifier.defense];
+    const params = [pokemonAModifier.nom, pokemonAModifier.type_primaire, pokemonAModifier.type_secondaire, pokemonAModifier.pv, pokemonAModifier.attaque, pokemonAModifier.defense, pokemonAModifier.id];
+    
+    try {
+        const [resultats] = await pool.query(requete, params);
+        return resultats ?? null;
+    } catch (erreur) {
+        console.log(`Erreur, code: ${erreur.code} sqlState ${erreur.sqlState} : ${erreur.sqlMessage}`);
+        throw erreur;
+    }
+};
+
+const _supprimerPokemon = async (id) => {
+    const requete = "DELETE FROM pokemon WHERE id = ?";
+    const params = [id];
     
     try {
         const [resultats] = await pool.query(requete, params);
@@ -85,5 +98,6 @@ export {
     _getPokemonById,
     _getPokemonList,
     _ajouterPokemon,
-    _modifierPokemon
+    _modifierPokemon,
+    _supprimerPokemon
 };
